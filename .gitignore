@@ -150,6 +150,6 @@ site
 ## Big data files
 *.xz
 *.gz
-latest.tsv # atb files
-*sqlite #sql files from atb 
+latest.tsv
+*sqlite 
 
