@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="./favicon.ico" />
+    <!-- Preload is necessary because we show these images when we disconnect from the server,
+    but at that point we cannot load these images from the server -->
+    <link rel="preload" href="./assets/gradient-yHQUC_QB.png" as="image" />
+    <link rel="preload" href="./assets/noise-60BoTA8O.png" as="image" />
+    <!-- Preload the fonts -->
+    <link rel="preload" href="./assets/Lora-VariableFont_wght-B2ootaw-.ttf" as="font" crossorigin="anonymous" />
+    <link rel="preload" href="./assets/PTSans-Regular-CxL0S8W7.ttf" as="font" crossorigin="anonymous" />
+    <link rel="preload" href="./assets/PTSans-Bold-D9fedIX3.ttf" as="font" crossorigin="anonymous" />
+    <link rel="preload" href="./assets/FiraMono-Regular-BTCkDNvf.ttf" as="font" crossorigin="anonymous" />
+    <link rel="preload" href="./assets/FiraMono-Medium-DU3aDxX5.ttf" as="font" crossorigin="anonymous" />
+    <link rel="preload" href="./assets/FiraMono-Bold-CLVRCuM9.ttf" as="font" crossorigin="anonymous" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="a marimo app" />
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+    <link rel="manifest" href="./manifest.json" />
+
+    <script data-marimo="true">
+      function __resizeIframe(obj) {
+        var scrollbarHeight = 20; // Max between windows, mac, and linux
+
+        function setHeight() {
+          // Guard against race condition where iframe isn't ready
+          if (!obj.contentWindow?.document?.documentElement) {
+            return;
+          }
+          var element = obj.contentWindow.document.documentElement;
+          // If there is no vertical scrollbar, we don't need to resize the iframe
+          if (element.scrollHeight === element.clientHeight) {
+            return;
+          }
+
+          // Create a new height that includes the scrollbar height if it's visible
+          var hasHorizontalScrollbar = element.scrollWidth > element.clientWidth;
+          var newHeight = element.scrollHeight + (hasHorizontalScrollbar ? scrollbarHeight : 0);
+
+          // Only update the height if it's different from the current height
+          if (obj.style.height !== `${newHeight}px`) {
+            obj.style.height = `${newHeight}px`;
+          }
+        }
+
+        // Resize the iframe to the height of the content and bottom scrollbar height
+        setHeight();
+
+        // Resize the iframe when the content changes
+        const resizeObserver = new ResizeObserver((entries) => {
+          setHeight();
+        });
+        // Only observe if iframe content is ready
+        if (obj.contentWindow?.document?.body) {
+          resizeObserver.observe(obj.contentWindow.document.body);
+        }
+      }
+    </script>
+    <marimo-filename hidden>notebook.py</marimo-filename>
+    <!-- TODO(Trevor): Legacy, required by VS Code plugin. Remove when plugin is updated (see marimo/server/_templates/template.py) -->
+    <marimo-version data-version="{{ version }}" hidden></marimo-version>
+    <marimo-user-config data-config="{{ user_config }}" hidden></marimo-user-config>
+    <marimo-server-token data-token="{{ server_token }}" hidden></marimo-server-token>
+    <!-- /TODO -->
+    <title>phase 1 faiss</title>
+    <script type="module" crossorigin src="./assets/index-D_l-X6Gn.js"></script>
+    <link rel="modulepreload" crossorigin href="./assets/preload-helper-DrOAYyMx.js">
+    <link rel="modulepreload" crossorigin href="./assets/chunk-DZLz74EQ.js">
+    <link rel="modulepreload" crossorigin href="./assets/react-cj45iF1i.js">
+    <link rel="modulepreload" crossorigin href="./assets/compiler-runtime-bbSa6V1W.js">
+    <link rel="modulepreload" crossorigin href="./assets/useEventListener-B585XJK6.js">
+    <link rel="modulepreload" crossorigin href="./assets/react-dom-BjyRIiB0.js">
+    <link rel="modulepreload" crossorigin href="./assets/jsx-runtime-srqCRIcI.js">
+    <link rel="modulepreload" crossorigin href="./assets/Combination-ChS5GBa2.js">
+    <link rel="modulepreload" crossorigin href="./assets/clsx-BlAkgCmw.js">
+    <link rel="modulepreload" crossorigin href="./assets/cn-BaXqCYqP.js">
+    <link rel="modulepreload" crossorigin href="./assets/menu-items-C-HcgP3A.js">
+    <link rel="modulepreload" crossorigin href="./assets/hotkeys-BxvS_drY.js">
+    <link rel="modulepreload" crossorigin href="./assets/button-C3DbbTE3.js">
+    <link rel="modulepreload" crossorigin href="./assets/dist-C8L1g4FL.js">
+    <link rel="modulepreload" crossorigin href="./assets/createLucideIcon-DjFD6uqw.js">
+    <link rel="modulepreload" crossorigin href="./assets/check-qhKOrN4z.js">
+    <link rel="modulepreload" crossorigin href="./assets/select-C3lT2mrt.js">
+    <link rel="modulepreload" crossorigin href="./assets/multi-map-D2K3AXi3.js">
+    <link rel="modulepreload" crossorigin href="./assets/chevron-right-GjRGzRTx.js">
+    <link rel="modulepreload" crossorigin href="./assets/dropdown-menu-BZzIne4N.js">
+    <link rel="modulepreload" crossorigin href="./assets/tooltip-DPrt9GJd.js">
+    <link rel="modulepreload" crossorigin href="./assets/_Uint8Array-D5Z9rM2X.js">
+    <link rel="modulepreload" crossorigin href="./assets/_getTag-D4FHE--3.js">
+    <link rel="modulepreload" crossorigin href="./assets/_baseIsEqual-DxkXZaQt.js">
+    <link rel="modulepreload" crossorigin href="./assets/jotai-CqcPj6qO.js">
+    <link rel="modulepreload" crossorigin href="./assets/invariant-L2NCWzlc.js">
+    <link rel="modulepreload" crossorigin href="./assets/isArrayLikeObject-JtDUKn_v.js">
+    <link rel="modulepreload" crossorigin href="./assets/merge-DfSRWBS2.js">
+    <link rel="modulepreload" crossorigin href="./assets/zod-U2NFpcFA.js">
+    <link rel="modulepreload" crossorigin href="./assets/utils-BaKzT0lw.js">
+    <link rel="modulepreload" crossorigin href="./assets/requests-oIXZIVkS.js">
+    <link rel="modulepreload" crossorigin href="./assets/once-BumILI4b.js">
+    <link rel="modulepreload" crossorigin href="./assets/toDate-DvFyyQ0g.js">
+    <link rel="modulepreload" crossorigin href="./assets/isSymbol-xTSywenE.js">
+    <link rel="modulepreload" crossorigin href="./assets/toString-CSTolK5a.js">
+    <link rel="modulepreload" crossorigin href="./assets/_baseSlice-B27Cqkm6.js">
+    <link rel="modulepreload" crossorigin href="./assets/_hasUnicode-CPHpt5EV.js">
+    <link rel="modulepreload" crossorigin href="./assets/useLifecycle-Rh0PP8AP.js">
+    <link rel="modulepreload" crossorigin href="./assets/capitalize-C7xY7zs_.js">
+    <link rel="modulepreload" crossorigin href="./assets/ai-model-dropdown-BJLAGM8G.js">
+    <link rel="modulepreload" crossorigin href="./assets/badge-Czo8nniw.js">
+    <link rel="modulepreload" crossorigin href="./assets/use-toast-CRhq8yNT.js">
+    <link rel="modulepreload" crossorigin href="./assets/constants-BVB3VlsI.js">
+    <link rel="modulepreload" crossorigin href="./assets/Deferred-CcxW2rNb.js">
+    <link rel="modulepreload" crossorigin href="./assets/config-BiJechkS.js">
+    <link rel="modulepreload" crossorigin href="./assets/uuid-JSI5Ub3m.js">
+    <link rel="modulepreload" crossorigin href="./assets/DeferredRequestRegistry-Ccjmqswm.js">
+    <link rel="modulepreload" crossorigin href="./assets/connection-9kD-dTJL.js">
+    <link rel="modulepreload" crossorigin href="./assets/useNonce-DNmDtTkp.js">
+    <link rel="modulepreload" crossorigin href="./assets/capabilities-DYNQ6-Fr.js">
+    <link rel="modulepreload" crossorigin href="./assets/createReducer-Dmpo08fh.js">
+    <link rel="modulepreload" crossorigin href="./assets/dist-BhO6Skm7.js">
+    <link rel="modulepreload" crossorigin href="./assets/dist-DYRcKBTi.js">
+    <link rel="modulepreload" crossorigin href="./assets/dist-nXbuW0eA.js">
+    <link rel="modulepreload" crossorigin href="./assets/dist-hfg5F1cQ.js">
+    <link rel="modulepreload" crossorigin href="./assets/dist-BzGULjtt.js">
+    <link rel="modulepreload" crossorigin href="./assets/dist-4dBKvAyu.js">
+    <link rel="modulepreload" crossorigin href="./assets/dist-0fLgeFYh.js">
+    <link rel="modulepreload" crossorigin href="./assets/dist-Dg2hoRfc.js">
+    <link rel="modulepreload" crossorigin href="./assets/dist-BIwaxZLx.js">
+    <link rel="modulepreload" crossorigin href="./assets/stex-p3EifZIQ.js">
+    <link rel="modulepreload" crossorigin href="./assets/cjs-Cm5h4Epc.js">
+    <link rel="modulepreload" crossorigin href="./assets/_arrayReduce-DDpPg0Qh.js">
+    <link rel="modulepreload" crossorigin href="./assets/type-CJyAPkYT.js">
+    <link rel="modulepreload" crossorigin href="./assets/_baseProperty-CIKnF2iY.js">
+    <link rel="modulepreload" crossorigin href="./assets/toNumber-B2sDWAxt.js">
+    <link rel="modulepreload" crossorigin href="./assets/now-B6JN1xKT.js">
+    <link rel="modulepreload" crossorigin href="./assets/debounce-DEligtiB.js">
+    <link rel="modulepreload" crossorigin href="./assets/toInteger-Dibvs7y1.js">
+    <link rel="modulepreload" crossorigin href="./assets/marked.esm-DI1fWf7x.js">
+    <link rel="modulepreload" crossorigin href="./assets/main-CJaEi7_U.js">
+    <link rel="modulepreload" crossorigin href="./assets/cells-CeDLVlyC.js">
+    <link rel="modulepreload" crossorigin href="./assets/kbd-BFNVm4a_.js">
+    <link rel="modulepreload" crossorigin href="./assets/renderShortcut-CeCEf8EV.js">
+    <link rel="modulepreload" crossorigin href="./assets/useEvent-Cf8AdHpz.js">
+    <link rel="modulepreload" crossorigin href="./assets/useDeleteCell-Bc3t2abM.js">
+    <link rel="modulepreload" crossorigin href="./assets/lazy-C9W0-DeZ.js">
+    <link rel="modulepreload" crossorigin href="./assets/defaultLocale-6gZ00BOD.js">
+    <link rel="modulepreload" crossorigin href="./assets/precisionRound-Cf6SJD9T.js">
+    <link rel="modulepreload" crossorigin href="./assets/defaultLocale-UbHGVTRZ.js">
+    <link rel="modulepreload" crossorigin href="./assets/vega-loader.browser-DCTaBKUs.js">
+    <link rel="modulepreload" crossorigin href="./assets/tooltip-Di3J3oYn.js">
+    <link rel="modulepreload" crossorigin href="./assets/ErrorBoundary-DwXLP_VL.js">
+    <link rel="modulepreload" crossorigin href="./assets/alert-dialog-CxCw9oQX.js">
+    <link rel="modulepreload" crossorigin href="./assets/dialog-ClIOAWpQ.js">
+    <link rel="modulepreload" crossorigin href="./assets/useDebounce-BjCf8IUS.js">
+    <link rel="modulepreload" crossorigin href="./assets/numbers-CSz2fa9C.js">
+    <link rel="modulepreload" crossorigin href="./assets/SSRProvider-iPaBBhYk.js">
+    <link rel="modulepreload" crossorigin href="./assets/context-CWS6NbZC.js">
+    <link rel="modulepreload" crossorigin href="./assets/useNumberFormatter-8H_iASaM.js">
+    <link rel="modulepreload" crossorigin href="./assets/usePress-B4wenCLd.js">
+    <link rel="modulepreload" crossorigin href="./assets/input-DLOryQh1.js">
+    <link rel="modulepreload" crossorigin href="./assets/ImperativeModal-ClGQ4GXE.js">
+    <link rel="modulepreload" crossorigin href="./assets/cell-link-D5-sZD73.js">
+    <link rel="modulepreload" crossorigin href="./assets/alert-DY4s_wkY.js">
+    <link rel="modulepreload" crossorigin href="./assets/links-hfBoJmYS.js">
+    <link rel="modulepreload" crossorigin href="./assets/state-D_bGND83.js">
+    <link rel="modulepreload" crossorigin href="./assets/MarimoErrorOutput-ffUzGr5X.js">
+    <link rel="modulepreload" crossorigin href="./assets/copy-ODI3-5mt.js">
+    <link rel="modulepreload" crossorigin href="./assets/copy-CysUGjt6.js">
+    <link rel="modulepreload" crossorigin href="./assets/copy-icon-BKJuA7HR.js">
+    <link rel="modulepreload" crossorigin href="./assets/spinner-5y3x0_Ja.js">
+    <link rel="modulepreload" crossorigin href="./assets/dist-BlRyYfZp.js">
+    <link rel="modulepreload" crossorigin href="./assets/focus-KxLnFZmO.js">
+    <link rel="modulepreload" crossorigin href="./assets/popover-B62m-yTZ.js">
+    <link rel="modulepreload" crossorigin href="./assets/useRunCells-CXTmbRd-.js">
+    <link rel="modulepreload" crossorigin href="./assets/mode-Cy78x1lY.js">
+    <link rel="modulepreload" crossorigin href="./assets/purify.es-BVYGX4Ma.js">
+    <link rel="modulepreload" crossorigin href="./assets/RenderHTML-BdiVNqB7.js">
+    <link rel="modulepreload" crossorigin href="./assets/table-C2UxG4br.js">
+    <link rel="modulepreload" crossorigin href="./assets/tabs-BLJxco2q.js">
+    <link rel="modulepreload" crossorigin href="./assets/add-missing-import-C21Sf8A6.js">
+    <link rel="modulepreload" crossorigin href="./assets/useAsyncData-CpUo9WyH.js">
+    <link rel="modulepreload" crossorigin href="./assets/useIframeCapabilities-Bl5E4Sdk.js">
+    <link rel="modulepreload" crossorigin href="./assets/LazyAnyLanguageCodeMirror-CmIpJ80x.js">
+    <link rel="modulepreload" crossorigin href="./assets/error-banner-Blvf_Trz.js">
+    <link rel="modulepreload" crossorigin href="./assets/formats-Dr-5EPUQ.js">
+    <link rel="modulepreload" crossorigin href="./assets/useTheme-4lRYVxu8.js">
+    <link rel="modulepreload" crossorigin href="./assets/en-US-ClM1rWQO.js">
+    <link rel="modulepreload" crossorigin href="./assets/isValid-B43jkoR_.js">
+    <link rel="modulepreload" crossorigin href="./assets/maps-B0oHN5Qo.js">
+    <link rel="modulepreload" crossorigin href="./assets/shim-CmijwmU8.js">
+    <link rel="modulepreload" crossorigin href="./assets/download-juEDJvh4.js">
+    <link rel="modulepreload" crossorigin href="./assets/extends-EzlYz0hD.js">
+    <link rel="modulepreload" crossorigin href="./assets/emotion-is-prop-valid.esm-D6cn-CSb.js">
+    <link rel="modulepreload" crossorigin href="./assets/useDateFormatter-D2bcOLFs.js">
+    <link rel="modulepreload" crossorigin href="./assets/katex-DBEwDXZO.js">
+    <link rel="modulepreload" crossorigin href="./assets/dist-BY77p5Y8.js">
+    <link rel="modulepreload" crossorigin href="./assets/range-CZ1Fqm86.js">
+    <link rel="modulepreload" crossorigin href="./assets/table-i48JTlkp.js">
+    <link rel="modulepreload" crossorigin href="./assets/Output-C35CXkvU.js">
+    <link rel="modulepreload" crossorigin href="./assets/name-cell-input-Dm0PF-vI.js">
+    <link rel="modulepreload" crossorigin href="./assets/useHotkey-BBy_zgts.js">
+    <link rel="modulepreload" crossorigin href="./assets/dist-CQqxjtPE.js">
+    <link rel="modulepreload" crossorigin href="./assets/dist-B0W-62VK.js">
+    <link rel="modulepreload" crossorigin href="./assets/dist-DA4REUWb.js">
+    <link rel="modulepreload" crossorigin href="./assets/dist-CTnCzwDO.js">
+    <link rel="modulepreload" crossorigin href="./assets/dist-BeLp8J28.js">
+    <link rel="modulepreload" crossorigin href="./assets/dist-CT07wNjy.js">
+    <link rel="modulepreload" crossorigin href="./assets/dist-CcT9aH0f.js">
+    <link rel="modulepreload" crossorigin href="./assets/dist-Cyd6BKf3.js">
+    <link rel="modulepreload" crossorigin href="./assets/dist-D6YDRgIP.js">
+    <link rel="modulepreload" crossorigin href="./assets/dist-D-fgvVNt.js">
+    <link rel="modulepreload" crossorigin href="./assets/dist-D2OZ4af5.js">
+    <link rel="modulepreload" crossorigin href="./assets/dist-Cep6eaBU.js">
+    <link rel="modulepreload" crossorigin href="./assets/dist-CG6nuuxF.js">
+    <link rel="modulepreload" crossorigin href="./assets/apl-B3qFo22I.js">
+    <link rel="modulepreload" crossorigin href="./assets/asciiarmor-BeSUfcJj.js">
+    <link rel="modulepreload" crossorigin href="./assets/asn1-Yuw4PYDQ.js">
+    <link rel="modulepreload" crossorigin href="./assets/brainfuck-ONQfYmGG.js">
+    <link rel="modulepreload" crossorigin href="./assets/clike-BYwnXoSp.js">
+    <link rel="modulepreload" crossorigin href="./assets/clojure-D0qS3s8l.js">
+    <link rel="modulepreload" crossorigin href="./assets/cmake-DrUW7k4w.js">
+    <link rel="modulepreload" crossorigin href="./assets/cobol-CTy-rAxC.js">
+    <link rel="modulepreload" crossorigin href="./assets/coffeescript-DvX85jdj.js">
+    <link rel="modulepreload" crossorigin href="./assets/commonlisp-rN2-4tA3.js">
+    <link rel="modulepreload" crossorigin href="./assets/crystal-DH9HaNMr.js">
+    <link rel="modulepreload" crossorigin href="./assets/css-BWSZbBOG.js">
+    <link rel="modulepreload" crossorigin href="./assets/cypher-CN0hHtlQ.js">
+    <link rel="modulepreload" crossorigin href="./assets/d-CfFhByTO.js">
+    <link rel="modulepreload" crossorigin href="./assets/diff-D5KX9jWB.js">
+    <link rel="modulepreload" crossorigin href="./assets/dtd-CAOt54Lh.js">
+    <link rel="modulepreload" crossorigin href="./assets/dylan-BRjSQyPa.js">
+    <link rel="modulepreload" crossorigin href="./assets/ecl-BFmhHLwk.js">
+    <link rel="modulepreload" crossorigin href="./assets/eiffel-C-yEc4lk.js">
+    <link rel="modulepreload" crossorigin href="./assets/elm-D-xosfDF.js">
+    <link rel="modulepreload" crossorigin href="./assets/erlang-DwS6VO1i.js">
+    <link rel="modulepreload" crossorigin href="./assets/simple-mode-iIH2XKLC.js">
+    <link rel="modulepreload" crossorigin href="./assets/factor-BAvqFhQd.js">
+    <link rel="modulepreload" crossorigin href="./assets/forth-M-b7RVCY.js">
+    <link rel="modulepreload" crossorigin href="./assets/fortran-BY42hR-9.js">
+    <link rel="modulepreload" crossorigin href="./assets/gas-DUer3zP4.js">
+    <link rel="modulepreload" crossorigin href="./assets/gherkin-BOmBFtxo.js">
+    <link rel="modulepreload" crossorigin href="./assets/groovy-CYRk_Zq8.js">
+    <link rel="modulepreload" crossorigin href="./assets/haskell-fLeayyju.js">
+    <link rel="modulepreload" crossorigin href="./assets/haxe-DiJvQ3PF.js">
+    <link rel="modulepreload" crossorigin href="./assets/idl-D0PcccZ6.js">
+    <link rel="modulepreload" crossorigin href="./assets/javascript-oC9cmYGe.js">
+    <link rel="modulepreload" crossorigin href="./assets/julia-z0xq3uqV.js">
+    <link rel="modulepreload" crossorigin href="./assets/livescript-BbVvVfSY.js">
+    <link rel="modulepreload" crossorigin href="./assets/lua-CtEmKXsU.js">
+    <link rel="modulepreload" crossorigin href="./assets/mathematica-B-SjlQIm.js">
+    <link rel="modulepreload" crossorigin href="./assets/mbox-BdnWvTJv.js">
+    <link rel="modulepreload" crossorigin href="./assets/mirc-Cyycx3am.js">
+    <link rel="modulepreload" crossorigin href="./assets/mllike-DSB5KObs.js">
+    <link rel="modulepreload" crossorigin href="./assets/modelica-DIZcE54y.js">
+    <link rel="modulepreload" crossorigin href="./assets/mscgen-MISBZbzR.js">
+    <link rel="modulepreload" crossorigin href="./assets/mumps-Cnu1tNUa.js">
+    <link rel="modulepreload" crossorigin href="./assets/nsis-BjqFSJO3.js">
+    <link rel="modulepreload" crossorigin href="./assets/ntriples-2rre165b.js">
+    <link rel="modulepreload" crossorigin href="./assets/octave-C7u5CeUZ.js">
+    <link rel="modulepreload" crossorigin href="./assets/oz-D5aE2uST.js">
+    <link rel="modulepreload" crossorigin href="./assets/pascal-DTApZM3o.js">
+    <link rel="modulepreload" crossorigin href="./assets/perl-Ckgh9LJK.js">
+    <link rel="modulepreload" crossorigin href="./assets/pig-jAl9a1Kh.js">
+    <link rel="modulepreload" crossorigin href="./assets/powershell-C_IKzlOl.js">
+    <link rel="modulepreload" crossorigin href="./assets/properties-BdVxDpDJ.js">
+    <link rel="modulepreload" crossorigin href="./assets/protobuf-DLu_SUI6.js">
+    <link rel="modulepreload" crossorigin href="./assets/pug-B4oU-GIl.js">
+    <link rel="modulepreload" crossorigin href="./assets/puppet-CShRizHW.js">
+    <link rel="modulepreload" crossorigin href="./assets/python-CV8UgSMV.js">
+    <link rel="modulepreload" crossorigin href="./assets/q-D2OTJZH4.js">
+    <link rel="modulepreload" crossorigin href="./assets/r-DRqIAgj1.js">
+    <link rel="modulepreload" crossorigin href="./assets/rpm-BStFD27m.js">
+    <link rel="modulepreload" crossorigin href="./assets/ruby-C37hkPS4.js">
+    <link rel="modulepreload" crossorigin href="./assets/sas-CCEIl8BG.js">
+    <link rel="modulepreload" crossorigin href="./assets/scheme-B0jflgrk.js">
+    <link rel="modulepreload" crossorigin href="./assets/shell-Cq7B0hFW.js">
+    <link rel="modulepreload" crossorigin href="./assets/sieve-DS0lS4kt.js">
+    <link rel="modulepreload" crossorigin href="./assets/smalltalk-HHM53Uii.js">
+    <link rel="modulepreload" crossorigin href="./assets/sparql-BMqtnWzI.js">
+    <link rel="modulepreload" crossorigin href="./assets/stylus-Br2gMpMI.js">
+    <link rel="modulepreload" crossorigin href="./assets/swift-BJ8qi_zI.js">
+    <link rel="modulepreload" crossorigin href="./assets/tcl-D0knbOX7.js">
+    <link rel="modulepreload" crossorigin href="./assets/textile-DrRQSuh3.js">
+    <link rel="modulepreload" crossorigin href="./assets/toml-C2kDGfZi.js">
+    <link rel="modulepreload" crossorigin href="./assets/troff-2dFxqWQa.js">
+    <link rel="modulepreload" crossorigin href="./assets/ttcn-cfg-CBXajWEo.js">
+    <link rel="modulepreload" crossorigin href="./assets/ttcn-Cj4sIofh.js">
+    <link rel="modulepreload" crossorigin href="./assets/turtle-CDdPtp5F.js">
+    <link rel="modulepreload" crossorigin href="./assets/vb-CtEhAMYU.js">
+    <link rel="modulepreload" crossorigin href="./assets/vbscript-B0nzdgzL.js">
+    <link rel="modulepreload" crossorigin href="./assets/velocity-DR7TSall.js">
+    <link rel="modulepreload" crossorigin href="./assets/verilog-MmKxT9bW.js">
+    <link rel="modulepreload" crossorigin href="./assets/vhdl-0jJrpQNA.js">
+    <link rel="modulepreload" crossorigin href="./assets/webidl-D9f20BkN.js">
+    <link rel="modulepreload" crossorigin href="./assets/xquery-B0eSGN9q.js">
+    <link rel="modulepreload" crossorigin href="./assets/yacas-BS613OH9.js">
+    <link rel="modulepreload" crossorigin href="./assets/z80-CJYC52xh.js">
+    <link rel="modulepreload" crossorigin href="./assets/esm-DIjo4soQ.js">
+    <link rel="modulepreload" crossorigin href="./assets/objectWithoutPropertiesLoose-CVHckof0.js">
+    <link rel="modulepreload" crossorigin href="./assets/esm-DHSHWgjO.js">
+    <link rel="modulepreload" crossorigin href="./assets/trash-DVXuVt6V.js">
+    <link rel="modulepreload" crossorigin href="./assets/ConsoleOutput-BatcZKPn.js">
+    <link rel="modulepreload" crossorigin href="./assets/icons-CiJ1mek2.js">
+    <link rel="modulepreload" crossorigin href="./assets/blob-BW6MxaEk.js">
+    <link rel="modulepreload" crossorigin href="./assets/add-cell-with-ai-y1F5Z2Y5.js">
+    <link rel="modulepreload" crossorigin href="./assets/chart-no-axes-column-Dr7zIwOF.js">
+    <link rel="modulepreload" crossorigin href="./assets/square-function-Bn-XGt0r.js">
+    <link rel="modulepreload" crossorigin href="./assets/spec-BsAvcxPB.js">
+    <link rel="modulepreload" crossorigin href="./assets/useInstallPackage-DboMQFVg.js">
+    <link rel="modulepreload" crossorigin href="./assets/column-preview-C1ukCxS-.js">
+    <link rel="modulepreload" crossorigin href="./assets/useAddCell-BiyTaqjl.js">
+    <link rel="modulepreload" crossorigin href="./assets/toggle-D5gLerI4.js">
+    <link rel="modulepreload" crossorigin href="./assets/api-CpOepRkn.js">
+    <link rel="modulepreload" crossorigin href="./assets/globals-CMwEtzs3.js">
+    <link rel="modulepreload" crossorigin href="./assets/share-BtLtbyWB.js">
+    <link rel="modulepreload" crossorigin href="./assets/dist-CjyEJrMA.js">
+    <link rel="modulepreload" crossorigin href="./assets/memoize-CAcr7Wct.js">
+    <link rel="modulepreload" crossorigin href="./assets/_toKey-BbfXi6wG.js">
+    <link rel="modulepreload" crossorigin href="./assets/_baseSet-CAH-_bH2.js">
+    <link rel="modulepreload" crossorigin href="./assets/utilities.esm-BzRjRyGG.js">
+    <link rel="modulepreload" crossorigin href="./assets/floating-outline-BNbDM0Mz.js">
+    <link rel="modulepreload" crossorigin href="./assets/eye-off-GfTQvjwT.js">
+    <link rel="modulepreload" crossorigin href="./assets/plus-CBaILRil.js">
+    <link rel="modulepreload" crossorigin href="./assets/readonly-python-code-BXa7vpHk.js">
+    <link rel="modulepreload" crossorigin href="./assets/file-video-camera-Dm03euNS.js">
+    <link rel="modulepreload" crossorigin href="./assets/file-text-DIapyZTO.js">
+    <link rel="modulepreload" crossorigin href="./assets/file-GcyCxgZE.js">
+    <link rel="modulepreload" crossorigin href="./assets/types-C9Bp8jO8.js">
+    <link rel="modulepreload" crossorigin href="./assets/label-g86spPBc.js">
+    <link rel="modulepreload" crossorigin href="./assets/form-DUdOrxYS.js">
+    <link rel="modulepreload" crossorigin href="./assets/textarea-Cnpv5prF.js">
+    <link rel="modulepreload" crossorigin href="./assets/circle-x-D7HuxVjU.js">
+    <link rel="modulepreload" crossorigin href="./assets/refresh-ccw-CFRARokg.js">
+    <link rel="modulepreload" crossorigin href="./assets/trash-2-CZtzD7wN.js">
+    <link rel="modulepreload" crossorigin href="./assets/form-CJBhqjDq.js">
+    <link rel="modulepreload" crossorigin href="./assets/field-4Jci0WvL.js">
+    <link rel="modulepreload" crossorigin href="./assets/switch-C9lQcGwc.js">
+    <link rel="modulepreload" crossorigin href="./assets/useBoolean-eYq94Ok6.js">
+    <link rel="modulepreload" crossorigin href="./assets/useDeepCompareMemoize-EIl6UkD1.js">
+    <link rel="modulepreload" crossorigin href="./assets/types-Dv1hfKnk.js">
+    <link rel="modulepreload" crossorigin href="./assets/prop-types-CHCkBeAL.js">
+    <link rel="modulepreload" crossorigin href="./assets/es-BEPT_zOX.js">
+    <link rel="modulepreload" crossorigin href="./assets/VisuallyHidden-lvJcGOAk.js">
+    <link rel="modulepreload" crossorigin href="./assets/_baseFlatten-umA55KZB.js">
+    <link rel="modulepreload" crossorigin href="./assets/get-CQF_Dkll.js">
+    <link rel="modulepreload" crossorigin href="./assets/hasIn-DgwLm9Ah.js">
+    <link rel="modulepreload" crossorigin href="./assets/_basePickBy-DQPJpG_l.js">
+    <link rel="modulepreload" crossorigin href="./assets/pick-DJvAHg2T.js">
+    <link rel="modulepreload" crossorigin href="./assets/square-CCW7bjI-.js">
+    <link rel="modulepreload" crossorigin href="./assets/code-xml-DKjdQj9o.js">
+    <link rel="modulepreload" crossorigin href="./assets/globe--Wj1_HOr.js">
+    <link rel="modulepreload" crossorigin href="./assets/send-BChAQAUR.js">
+    <link rel="modulepreload" crossorigin href="./assets/refresh-cw-DEnZI2dn.js">
+    <link rel="modulepreload" crossorigin href="./assets/settings-CN8Z3_-5.js">
+    <link rel="modulepreload" crossorigin href="./assets/triangle-alert-BGycXz6g.js">
+    <link rel="modulepreload" crossorigin href="./assets/bundle.esm-DtrWSlr6.js">
+    <link rel="stylesheet" crossorigin href="./assets/cells-BvrC6Bsv.css">
+    <link rel="stylesheet" crossorigin href="./assets/dist-CUNt1nyj.css">
+    <link rel="stylesheet" crossorigin href="./assets/Output-Br1mGKlI.css">
+    <link rel="stylesheet" crossorigin href="./assets/ConsoleOutput-BFFTcC5Y.css">
+    <link rel="stylesheet" crossorigin href="./assets/index-xc2Ie6gg.css">
+  <marimo-wasm hidden=""></marimo-wasm>
+    <script>
+        if (window.location.protocol === 'file:') {
+            alert('Warning: This file must be served by an HTTP server to function correctly.');
+        }
+    </script>
+    
+    <style>
+        #save-button {
+            display: none !important;
+        }
+        #filename-input {
+            display: none !important;
+        }
+    </style>
+    <marimo-code hidden="">import%20marimo%0A%0A__generated_with%20%3D%20%220.18.1%22%0Aapp%20%3D%20marimo.App(width%3D%22full%22)%0A%0A%0A%40app.cell%0Adef%20_()%3A%0A%20%20%20%20import%20marimo%20as%20mo%20%0A%20%20%20%20from%20pathlib%20import%20Path%0A%20%20%20%20import%20json%20%0A%20%20%20%20import%20numpy%20as%20np%20%0A%20%20%20%20import%20polars%20as%20pl%20%0A%20%20%20%20import%20pandas%20as%20pd%20%0A%20%20%20%20from%20sklearn.decomposition%20import%20PCA%20%0A%20%20%20%20import%20plotly.express%20as%20px%0A%20%20%20%20import%20faiss%0A%20%20%20%20return%20PCA%2C%20Path%2C%20faiss%2C%20json%2C%20mo%2C%20np%2C%20pl%2C%20px%0A%0A%0A%40app.cell%0Adef%20_()%3A%0A%20%20%20%20import%20warnings%0A%20%20%20%20import%20sklearn%0A%0A%20%20%20%20%23%20Ignore%20all%20FutureWarnings%20from%20sklearn%0A%20%20%20%20warnings.filterwarnings(%0A%20%20%20%20%20%20%20%20%22ignore%22%2C%0A%20%20%20%20%20%20%20%20category%3DFutureWarning%2C%0A%20%20%20%20%20%20%20%20module%3D%22sklearn%22%0A%20%20%20%20)%0A%20%20%20%20return%0A%0A%0A%40app.cell%0Adef%20_(Path)%3A%0A%20%20%20%20BASE_DIR%20%3D%20Path(%22%2Fmnt%2Fsan%2Fmicrobio%2Fdatabase%2Ftriplet_semihard_loss-ranger-0.5-hq-256-CNNFCGR_Levels-level1-clip80%22)%20%2F%20%22index%22%0A%20%20%20%20EMBEDDINGS_PATH%20%3D%20BASE_DIR%20%2F%20%22embeddings.npy%22%0A%20%20%20%20ID_EMBEDDINGS_PATH%20%3D%20BASE_DIR%20%2F%20%22id_embeddings.json%22%0A%20%20%20%20LABELS_PATH%20%3D%20BASE_DIR%20%2F%20%22labels.json%22%0A%0A%20%20%20%20BASE_DIR%2C%20EMBEDDINGS_PATH%2C%20ID_EMBEDDINGS_PATH%2C%20LABELS_PATH%0A%20%20%20%20return%20EMBEDDINGS_PATH%2C%20ID_EMBEDDINGS_PATH%2C%20LABELS_PATH%0A%0A%0A%40app.cell%0Adef%20_(EMBEDDINGS_PATH%2C%20ID_EMBEDDINGS_PATH%2C%20LABELS_PATH%2C%20json%2C%20np%2C%20pl)%3A%0A%20%20%20%20%23%203.1%20Load%20embeddings%20(PanSpace%20embedding%20matrix)%0A%20%20%20%20E%20%3D%20np.load(EMBEDDINGS_PATH)%20%20%23%20shape%20(N%2C%20D)%0A%20%20%20%20N%2C%20D%20%3D%20E.shape%0A%0A%20%20%20%20%23%203.2%20Load%20mapping%3A%20embedding%20index%20-%3E%20genome_id%0A%20%20%20%20with%20open(ID_EMBEDDINGS_PATH)%20as%20f%3A%0A%20%20%20%20%20%20%20%20id_map%20%3D%20json.load(f)%0A%20%20%20%20with%20open(LABELS_PATH)%20as%20f%3A%0A%20%20%20%20%20%20%20%20labels%20%3D%20json.load(f)%0A%20%20%20%20records%20%3D%20%5B%5D%0A%20%20%20%20for%20emb_idx_str%2C%20path%20in%20id_map.items()%3A%20%0A%20%20%20%20%20%20%20%20emb_idx%20%3D%20int(emb_idx_str)%20%0A%20%20%20%20%20%20%20%20label_str%20%3D%20labels.get(emb_idx_str%2C%20%22%22)%20%0A%20%20%20%20%20%20%20%20records.append(%20%7B%20%22emb_idx%22%3A%20emb_idx%2C%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22genome_id%22%3A%20path%2C%20%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22raw_label%22%3A%20label_str%2C%7D)%20%0A%20%20%20%20df%20%3D%20pl.DataFrame(records).sort(%22emb_idx%22)%0A%20%20%20%20return%20E%2C%20df%0A%0A%0A%40app.cell%0Adef%20_(df%2C%20pl)%3A%0A%20%20%20%20df_tax%20%3D%20df.clone()%20%0A%20%20%20%20df_tax%20%3D%20df_tax.with_columns(%20pl.col(%22genome_id%22).str.split(%22%2F%22).alias(%22path_parts%22)%20)%0A%20%20%20%20df_tax%20%3D%20df_tax.with_columns(%20pl.col(%22path_parts%22).list.get(-2).alias(%22dir_name%22)%2C%20pl.col(%22path_parts%22).list.get(-1).alias(%22filename%22)%2C%20)%0A%20%20%20%20df_tax%20%3D%20df_tax.with_columns(%20pl.col(%22filename%22)%20.str.replace(%22.npy%22%2C%20%22%22)%20.alias(%22sample_id%22)%20)%0A%20%20%20%20df_tax%20%3D%20df_tax.with_columns(%20pl.col(%22raw_label%22)%20.cast(pl.Utf8)%20.str.split(%22_%22)%20.alias(%22label_tokens%22)%20)%0A%20%20%20%20df_tax%20%3D%20df_tax.with_columns(%20pl.when(pl.col(%22label_tokens%22).list.len()%20%3E%3D%201)%20.then(pl.col(%22label_tokens%22).list.get(0))%20.otherwise(None)%20.alias(%22genus%22)%20)%0A%20%20%20%20df_tax%20%3D%20df_tax.with_columns(%20pl.when(pl.col(%22label_tokens%22).list.len()%20%3E%3D%202)%20.then(%20pl.concat_str(%20%5B%20pl.col(%22label_tokens%22).list.get(0)%2C%20pl.lit(%22%20%22)%2C%20pl.col(%22label_tokens%22).list.slice(1).list.join(%22%20%22)%20%5D%20)%20)%20.otherwise(None)%20.alias(%22species%22)%20)%0A%20%20%20%20return%20(df_tax%2C)%0A%0A%0A%40app.cell%0Adef%20_()%3A%0A%20%20%20%20BENCHMARK_GENERA%20%3D%20%7B%20%0A%20%20%20%20%20%20%20%20%22bacillus%22%3A%20r%22%5Ebacillus%5Ba-z%5D*%24%22%2C%0A%20%20%20%20%20%20%20%20%22bacillusS%22%3A%20r%22%5Ebacillus%24%22%2C%20%0A%20%20%20%20%20%20%20%20%22bacillusA%22%3A%20r%22%5Ebacillusa%22%2C%20%0A%20%20%20%20%20%20%20%20%22streptococcus%22%3A%20r%22%5Estreptococcus%24%22%2C%20%0A%20%20%20%20%20%20%20%20%22escherichia%22%3A%20r%22%5Eescherichia%24%22%2C%0A%20%20%20%20%20%20%20%20%22mycobacterium%22%3A%20r%22%5Emycobacterium%24%22%0A%20%20%20%20%7D%0A%20%20%20%20return%20(BENCHMARK_GENERA%2C)%0A%0A%0A%40app.cell%0Adef%20_(df_tax%2C%20pl)%3A%0A%20%20%20%20present%20%3D%20(%20df_tax%20.select(pl.col(%22genus%22))%20.drop_nulls()%20.unique()%20.to_series()%20.to_list()%20)%0A%20%20%20%20present_series%20%3D%20pl.Series(%22genus%22%2C%20present).cast(pl.Utf8)%0A%20%20%20%20return%20(present_series%2C)%0A%0A%0A%40app.cell%0Adef%20_(BENCHMARK_GENERA%2C%20mo%2C%20present_series)%3A%0A%20%20%20%20available_benchmarks%20%3D%20%5B%5D%20%0A%20%20%20%20for%20name%2C%20pattern%20in%20BENCHMARK_GENERA.items()%3A%20%0A%20%20%20%20%20%20%20%20if%20present_series.str.contains(pattern%2C%20literal%3DFalse).any()%3A%20%0A%20%20%20%20%20%20%20%20%20%20%20%20available_benchmarks.append(name)%20%0A%20%20%20%20%20%20%20%20%20%20%20%20genus_selector%20%3D%20mo.ui.dropdown(options%3Davailable_benchmarks%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20value%3Davailable_benchmarks%5B0%5D%20if%20available_benchmarks%20else%20None%2C%20%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20label%3D%22Select%20benchmark%20genus%22%2C%20)%20%0A%0A%20%20%20%20ui%20%3D%20mo.vstack(%20%5B%20mo.md(%22%23%23%20Choose%20test%20genus%22)%2C%20genus_selector%2C%20%5D%20)%20%0A%20%20%20%20ui%0A%20%20%20%20return%20(genus_selector%2C)%0A%0A%0A%40app.cell%0Adef%20_(BENCHMARK_GENERA%2C%20E%2C%20df_tax%2C%20genus_selector%2C%20pl)%3A%0A%20%20%20%20selected_genus%20%3D%20genus_selector.value%0A%20%20%20%20regex%20%3D%20BENCHMARK_GENERA%5Bselected_genus%5D%0A%20%20%20%20df_genus%20%3D%20df_tax.filter(%20pl.col(%22genus%22).cast(pl.Utf8).str.contains(regex%2C%20literal%3DFalse))%0A%20%20%20%20idxs%20%3D%20df_genus%5B%22emb_idx%22%5D.to_numpy().astype(int)%0A%20%20%20%20E_genus%20%3D%20E%5Bidxs%5D%0A%20%20%20%20genus_counts%20%3D%20(%20df_genus%20.group_by(%22species%22)%20.agg(pl.len().alias(%22n%22))%20.sort(%22n%22%2C%20descending%3DTrue)%20)%0A%20%20%20%20return%20E_genus%2C%20df_genus%2C%20idxs%0A%0A%0A%40app.cell%0Adef%20_(E%2C%20E_genus%2C%20PCA%2C%20df_genus%2C%20idxs%2C%20pl%2C%20px)%3A%0A%20%20%20%20import%20builtins%0A%0A%20%20%20%20n_components%20%3D%20min(50%2C%20E_genus.shape%5B0%5D)%0A%20%20%20%20pca%20%3D%20PCA(n_components%3Dn_components)%20%0A%20%20%20%20X_pca%20%3D%20pca.fit_transform(E%5Bidxs%5D)%0A%20%20%20%20explained_variance_ratio%20%3D%20pca.explained_variance_ratio_%0A%0A%20%20%20%20pca3d%20%3D%20X_pca%5B%3A%2C%20%3A3%5D%0A%20%20%20%20df_3d%20%3D%20df_genus.with_columns(%0A%20%20%20%20%20%20%20%20%5B%0A%20%20%20%20%20%20%20%20%20%20%20%20pl.Series(%22pc1%22%2C%20pca3d%5B%3A%2C%200%5D)%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20pl.Series(%22pc2%22%2C%20pca3d%5B%3A%2C%201%5D)%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20pl.Series(%22pc3%22%2C%20pca3d%5B%3A%2C%202%5D)%2C%0A%20%20%20%20%20%20%20%20%5D%0A%20%20%20%20)%0A%0A%20%20%20%20N_PER_SPECIES%20%3D%20300%0A%0A%20%20%20%20dfs%20%3D%20%5B%5D%0A%20%20%20%20for%20sp%20in%20df_3d%5B%22species%22%5D.unique().to_list()%3A%0A%20%20%20%20%20%20%20%20sub%20%3D%20df_3d.filter(pl.col(%22species%22)%20%3D%3D%20sp)%0A%20%20%20%20%20%20%20%20sub_n%20%3D%20sub.shape%5B0%5D%20%20%20%20%20%20%20%20%20%20%23%20%3C%E2%80%94%20avoids%20shadowed%20height()%0A%20%20%20%20%20%20%20%20n%20%3D%20builtins.min(N_PER_SPECIES%2C%20sub_n)%0A%20%20%20%20%20%20%20%20dfs.append(sub.sample(n%3Dn%2C%20shuffle%3DTrue))%0A%20%20%20%20df_plot%20%3D%20pl.concat(dfs)%0A%20%20%20%20df_plot_pd%20%3D%20df_plot.to_pandas()%0A%0A%20%20%20%20fig_pca%20%3D%20px.scatter_3d(%0A%20%20%20%20%20%20%20%20df_plot_pd%2C%0A%20%20%20%20%20%20%20%20x%3D%22pc1%22%2C%20y%3D%22pc2%22%2C%20z%3D%22pc3%22%2C%0A%20%20%20%20%20%20%20%20color%3D%22species%22%2C%0A%20%20%20%20%20%20%20%20hover_data%3D%5B%22genome_id%22%2C%20%22sample_id%22%5D%2C%0A%20%20%20%20%20%20%20%20opacity%3D0.7%2C%0A%20%20%20%20)%0A%20%20%20%20fig_pca.update_layout(scene_dragmode%3D%22orbit%22)%0A%20%20%20%20fig_pca%0A%20%20%20%20return%0A%0A%0Aapp._unparsable_cell(%0A%20%20%20%20r%22%22%22%0A%20%20%20%20%23%20k%20values%20you%20want%20to%20test%20(including%20self%2C%20as%20FAISS%20returns)%0A%20%20%20%20%20%20%20%20k_values%20%3D%20%5B2%2C%205%2C%206%2C7%2C8%2C9%2C10%2C%2015%2C%2020%2C%2030%2C%2050%2C%20100%5D%0A%0A%20%20%20%20%20%20%20%20%23%20HDBSCAN%20hyperparameters%0A%20%20%20%20%20%20%20%20hdb_min_cluster_size%20%3D%2050%20%20%20%20%23%20tune%20per%20genus%0A%20%20%20%20%20%20%20%20hdb_min_samples%20%3D%20None%20%20%20%20%20%20%20%23%20or%20e.g.%2010%0A%0A%20%20%20%20%20%20%20%20%23%20Leiden%20hyperparameters%0A%20%20%20%20%20%20%20%20leiden_resolution%20%3D%201.0%20%20%20%20%20%20%23%20higher%20%E2%86%92%20more%20clusters%0A%20%20%20%20%22%22%22%2C%0A%20%20%20%20name%3D%22_%22%0A)%0A%0A%0A%40app.cell%0Adef%20_(E_genus%2C%20faiss%2C%20k_values)%3A%0A%20%20%20%20%23%20Ensure%20float32%20for%20FAISS%0A%20%20%20%20X_genus%20%3D%20E_genus.astype(%22float32%22).copy()%0A%0A%20%20%20%20%23%20Cosine-like%20similarity%20via%20L2%20normalization%20%2B%20inner%20product%0A%20%20%20%20faiss.normalize_L2(X_genus)%0A%0A%20%20%20%20n_samples%2C%20dim%20%3D%20X_genus.shape%0A%0A%20%20%20%20%23%20Use%20the%20largest%20k%20we%20need%0A%20%20%20%20max_k%20%3D%20max(k_values)%0A%0A%20%20%20%20%23%20Build%20GPU%20index%0A%20%20%20%20res%20%3D%20faiss.StandardGpuResources()%0A%20%20%20%20cpu_index%20%3D%20faiss.IndexFlatIP(dim)%0A%20%20%20%20gpu_index%20%3D%20faiss.index_cpu_to_gpu(res%2C%200%2C%20cpu_index)%0A%0A%20%20%20%20gpu_index.add(X_genus)%0A%0A%20%20%20%20%23%20Self%20kNN%20search%20for%20max_k%0A%20%20%20%20sims_knn_full%2C%20idx_knn_full%20%3D%20gpu_index.search(X_genus%2C%20max_k)%0A%0A%20%20%20%20%23%20sims_knn%5Bi%2C%20%3A%5D%20%20-%3E%20similarity%20scores%20of%20neighbors%20of%20point%20i%0A%20%20%20%20%23%20idx_knn%5Bi%2C%20%3A%5D%20%20%20-%3E%20indices%20of%20neighbors%20of%20point%20i%0A%20%20%20%20return%20X_genus%2C%20idx_knn_full%2C%20sims_knn_full%0A%0A%0A%40app.cell%0Adef%20_(np)%3A%0A%20%20%20%20from%20scipy%20import%20sparse%0A%20%20%20%20from%20scipy.sparse%20import%20csgraph%0A%20%20%20%20import%20hdbscan%0A%20%20%20%20import%20igraph%20as%20ig%0A%20%20%20%20import%20leidenalg%0A%20%20%20%20from%20sklearn.metrics%20import%20silhouette_score%2C%20adjusted_rand_score%0A%20%20%20%20def%20build_knn_graph(idx_knn%2C%20sims_knn)%3A%0A%20%20%20%20%20%20%20%20%22%22%22%0A%20%20%20%20%20%20%20%20idx_knn%2C%20sims_knn%3A%20shape%20(n_samples%2C%20k)%20including%20self%20as%20first%20column.%0A%20%20%20%20%20%20%20%20Returns%20symmetric%20sparse%20adjacency.%0A%20%20%20%20%20%20%20%20%22%22%22%0A%20%20%20%20%20%20%20%20n_samples%2C%20k%20%3D%20idx_knn.shape%0A%0A%20%20%20%20%20%20%20%20%23%20Drop%20the%20self-neighbor%20(column%200)%0A%20%20%20%20%20%20%20%20neighbor_idx%20%3D%20idx_knn%5B%3A%2C%201%3A%5D%0A%20%20%20%20%20%20%20%20neighbor_sims%20%3D%20sims_knn%5B%3A%2C%201%3A%5D%0A%20%20%20%20%20%20%20%20k_eff%20%3D%20k%20-%201%0A%0A%20%20%20%20%20%20%20%20sources%20%3D%20np.repeat(np.arange(n_samples)%2C%20k_eff)%0A%20%20%20%20%20%20%20%20targets%20%3D%20neighbor_idx.reshape(-1)%0A%20%20%20%20%20%20%20%20weights%20%3D%20neighbor_sims.reshape(-1)%0A%0A%20%20%20%20%20%20%20%20A%20%3D%20sparse.csr_matrix(%0A%20%20%20%20%20%20%20%20%20%20%20%20(weights%2C%20(sources%2C%20targets))%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20shape%3D(n_samples%2C%20n_samples)%2C%0A%20%20%20%20%20%20%20%20)%0A%20%20%20%20%20%20%20%20A_sym%20%3D%20A.maximum(A.T)%0A%20%20%20%20%20%20%20%20return%20A_sym%0A%0A%20%20%20%20def%20run_hdbscan(X%2C%20min_cluster_size%2C%20min_samples)%3A%0A%20%20%20%20%20%20%20%20clusterer%20%3D%20hdbscan.HDBSCAN(%0A%20%20%20%20%20%20%20%20%20%20%20%20min_cluster_size%3Dmin_cluster_size%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20min_samples%3Dmin_samples%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20metric%3D%22euclidean%22%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20core_dist_n_jobs%3D-1%2C%0A%20%20%20%20%20%20%20%20)%0A%20%20%20%20%20%20%20%20labels%20%3D%20clusterer.fit_predict(X)%0A%20%20%20%20%20%20%20%20return%20labels%2C%20clusterer%0A%0A%20%20%20%20def%20run_leiden_from_adj(A_sym%2C%20resolution)%3A%0A%20%20%20%20%20%20%20%20A_coo%20%3D%20A_sym.tocoo()%0A%20%20%20%20%20%20%20%20n_nodes%20%3D%20A_sym.shape%5B0%5D%0A%20%20%20%20%20%20%20%20edges%20%3D%20list(zip(A_coo.row.tolist()%2C%20A_coo.col.tolist()))%0A%20%20%20%20%20%20%20%20weights%20%3D%20A_coo.data.astype(float)%0A%0A%20%20%20%20%20%20%20%20g%20%3D%20ig.Graph(n%3Dn_nodes%2C%20edges%3Dedges%2C%20directed%3DFalse)%0A%20%20%20%20%20%20%20%20g.es%5B%22weight%22%5D%20%3D%20weights%0A%0A%20%20%20%20%20%20%20%20partition%20%3D%20leidenalg.find_partition(%0A%20%20%20%20%20%20%20%20%20%20%20%20g%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20leidenalg.RBConfigurationVertexPartition%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20weights%3Dg.es%5B%22weight%22%5D%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20resolution_parameter%3Dresolution%2C%0A%20%20%20%20%20%20%20%20)%0A%20%20%20%20%20%20%20%20labels%20%3D%20np.array(partition.membership)%0A%20%20%20%20%20%20%20%20return%20labels%2C%20g%2C%20partition%0A%0A%20%20%20%20def%20graph_connectivity_stats(A_sym)%3A%0A%20%20%20%20%20%20%20%20%22%22%22%0A%20%20%20%20%20%20%20%20Connected%20components%20and%20giant%20component%20size.%0A%20%20%20%20%20%20%20%20%22%22%22%0A%20%20%20%20%20%20%20%20n_components%2C%20labels%20%3D%20csgraph.connected_components(%0A%20%20%20%20%20%20%20%20%20%20%20%20A_sym%2C%20directed%3DFalse%2C%20connection%3D'weak'%0A%20%20%20%20%20%20%20%20)%0A%20%20%20%20%20%20%20%20component_sizes%20%3D%20np.bincount(labels)%0A%20%20%20%20%20%20%20%20giant%20%3D%20component_sizes.max()%0A%20%20%20%20%20%20%20%20giant_fraction%20%3D%20giant%20%2F%20A_sym.shape%5B0%5D%0A%20%20%20%20%20%20%20%20return%20n_components%2C%20giant_fraction%0A%0A%20%20%20%20def%20clustering_metrics(X%2C%20labels_hdb%2C%20labels_leiden%2C%20A_sym)%3A%0A%20%20%20%20%20%20%20%20results%20%3D%20%7B%7D%0A%0A%20%20%20%20%20%20%20%20%23%20---%20Cluster%20counts%20%2F%20noise%20---%0A%20%20%20%20%20%20%20%20mask_hdb%20%3D%20labels_hdb%20%3E%3D%200%0A%20%20%20%20%20%20%20%20unique_hdb%20%3D%20np.unique(labels_hdb%5Bmask_hdb%5D)%20if%20mask_hdb.any()%20else%20%5B%5D%0A%20%20%20%20%20%20%20%20n_clusters_hdb%20%3D%20len(unique_hdb)%0A%20%20%20%20%20%20%20%20noise_fraction_hdb%20%3D%201.0%20-%20(mask_hdb.sum()%20%2F%20len(labels_hdb))%0A%0A%20%20%20%20%20%20%20%20n_clusters_leiden%20%3D%20len(np.unique(labels_leiden))%0A%0A%20%20%20%20%20%20%20%20results%5B%22n_clusters_hdb%22%5D%20%3D%20n_clusters_hdb%0A%20%20%20%20%20%20%20%20results%5B%22n_clusters_leiden%22%5D%20%3D%20n_clusters_leiden%0A%20%20%20%20%20%20%20%20results%5B%22noise_fraction_hdb%22%5D%20%3D%20noise_fraction_hdb%0A%0A%20%20%20%20%20%20%20%20%23%20---%20Silhouette%20scores%20---%0A%20%20%20%20%20%20%20%20try%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20if%20mask_hdb.sum()%20%3E%201%20and%20n_clusters_hdb%20%3E%201%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20sil_hdb%20%3D%20silhouette_score(X%5Bmask_hdb%5D%2C%20labels_hdb%5Bmask_hdb%5D)%0A%20%20%20%20%20%20%20%20%20%20%20%20else%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20sil_hdb%20%3D%20np.nan%0A%20%20%20%20%20%20%20%20except%20Exception%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20sil_hdb%20%3D%20np.nan%0A%0A%20%20%20%20%20%20%20%20try%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20if%20n_clusters_leiden%20%3E%201%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20sil_leiden%20%3D%20silhouette_score(X%2C%20labels_leiden)%0A%20%20%20%20%20%20%20%20%20%20%20%20else%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20sil_leiden%20%3D%20np.nan%0A%20%20%20%20%20%20%20%20except%20Exception%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20sil_leiden%20%3D%20np.nan%0A%0A%20%20%20%20%20%20%20%20results%5B%22silhouette_hdb%22%5D%20%3D%20sil_hdb%0A%20%20%20%20%20%20%20%20results%5B%22silhouette_leiden%22%5D%20%3D%20sil_leiden%0A%0A%20%20%20%20%20%20%20%20%23%20---%20Agreement%20between%20methods%20(ARI)%20---%0A%20%20%20%20%20%20%20%20try%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20if%20mask_hdb.sum()%20%3E%201%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20ari%20%3D%20adjusted_rand_score(%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20labels_hdb%5Bmask_hdb%5D%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20labels_leiden%5Bmask_hdb%5D%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20)%0A%20%20%20%20%20%20%20%20%20%20%20%20else%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20ari%20%3D%20np.nan%0A%20%20%20%20%20%20%20%20except%20Exception%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20ari%20%3D%20np.nan%0A%20%20%20%20%20%20%20%20results%5B%22ari_hdb_vs_leiden%22%5D%20%3D%20ari%0A%0A%20%20%20%20%20%20%20%20%23%20---%20Graph%20connectivity%20---%0A%20%20%20%20%20%20%20%20n_components%2C%20giant_fraction%20%3D%20graph_connectivity_stats(A_sym)%0A%20%20%20%20%20%20%20%20results%5B%22n_components%22%5D%20%3D%20n_components%0A%20%20%20%20%20%20%20%20results%5B%22giant_component_fraction%22%5D%20%3D%20giant_fraction%0A%0A%20%20%20%20%20%20%20%20return%20results%0A%20%20%20%20return%20(%0A%20%20%20%20%20%20%20%20build_knn_graph%2C%0A%20%20%20%20%20%20%20%20clustering_metrics%2C%0A%20%20%20%20%20%20%20%20run_hdbscan%2C%0A%20%20%20%20%20%20%20%20run_leiden_from_adj%2C%0A%20%20%20%20)%0A%0A%0A%40app.cell%0Adef%20_(%0A%20%20%20%20X_genus%2C%0A%20%20%20%20build_knn_graph%2C%0A%20%20%20%20clustering_metrics%2C%0A%20%20%20%20hdb_min_cluster_size%2C%0A%20%20%20%20hdb_min_samples%2C%0A%20%20%20%20idx_knn_full%2C%0A%20%20%20%20k_values%2C%0A%20%20%20%20leiden_resolution%2C%0A%20%20%20%20pl%2C%0A%20%20%20%20run_hdbscan%2C%0A%20%20%20%20run_leiden_from_adj%2C%0A%20%20%20%20sims_knn_full%2C%0A)%3A%0A%20%20%20%20sweep_records%20%3D%20%5B%5D%0A%0A%20%20%20%20for%20k%20in%20k_values%3A%0A%20%20%20%20%20%20%20%20%23%20Use%20first%20k%20neighbors%20(including%20self)%0A%20%20%20%20%20%20%20%20sims_k%20%3D%20sims_knn_full%5B%3A%2C%20%3Ak%5D%0A%20%20%20%20%20%20%20%20idx_k%20%3D%20idx_knn_full%5B%3A%2C%20%3Ak%5D%0A%0A%20%20%20%20%20%20%20%20%23%201)%20Build%20kNN%20graph%0A%20%20%20%20%20%20%20%20A_sym_k%20%3D%20build_knn_graph(idx_k%2C%20sims_k)%0A%0A%20%20%20%20%20%20%20%20%23%202)%20HDBSCAN%20clustering%20on%20X_genus%0A%20%20%20%20%20%20%20%20labels_hdb%2C%20_%20%3D%20run_hdbscan(%0A%20%20%20%20%20%20%20%20%20%20%20%20X_genus%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20min_cluster_size%3Dhdb_min_cluster_size%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20min_samples%3Dhdb_min_samples%2C%0A%20%20%20%20%20%20%20%20)%0A%0A%20%20%20%20%20%20%20%20%23%203)%20Leiden%20clustering%20on%20the%20kNN%20graph%0A%20%20%20%20%20%20%20%20labels_leiden%2C%20_%2C%20_%20%3D%20run_leiden_from_adj(%0A%20%20%20%20%20%20%20%20%20%20%20%20A_sym_k%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20resolution%3Dleiden_resolution%2C%0A%20%20%20%20%20%20%20%20)%0A%0A%20%20%20%20%20%20%20%20%23%204)%20Metrics%0A%20%20%20%20%20%20%20%20metrics%20%3D%20clustering_metrics(%0A%20%20%20%20%20%20%20%20%20%20%20%20X_genus%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20labels_hdb%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20labels_leiden%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20A_sym_k%2C%0A%20%20%20%20%20%20%20%20)%0A%0A%20%20%20%20%20%20%20%20record%20%3D%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%22k%22%3A%20k%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20**metrics%2C%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20sweep_records.append(record)%0A%0A%20%20%20%20df_k_sweep%20%3D%20pl.DataFrame(sweep_records)%0A%0A%20%20%20%20df_k_sweep%0A%20%20%20%20return%20labels_hdb%2C%20labels_leiden%0A%0A%0A%40app.cell%0Adef%20_(df_genus%2C%20labels_hdb%2C%20labels_leiden%2C%20pl)%3A%0A%20%20%20%20df_genus_clusters%20%3D%20df_genus.with_columns(%5B%0A%20%20%20%20%20%20%20%20pl.Series(%22cluster_hdbscan_k30%22%2C%20labels_hdb)%2C%0A%20%20%20%20%20%20%20%20pl.Series(%22cluster_leiden_k30%22%2C%20labels_leiden)%2C%0A%20%20%20%20%5D)%0A%20%20%20%20df_genus_clusters%0A%20%20%20%20return%0A%0A%0A%40app.cell%0Adef%20_(%0A%20%20%20%20X_genus%2C%0A%20%20%20%20build_knn_graph%2C%0A%20%20%20%20idx_knn_full%2C%0A%20%20%20%20np%2C%0A%20%20%20%20run_hdbscan%2C%0A%20%20%20%20run_leiden_from_adj%2C%0A%20%20%20%20sims_knn_full%2C%0A)%3A%0A%20%20%20%20%23%20Choose%20k%20inside%20stability%20plateau%0A%20%20%20%20k_bacillus%20%3D%2030%0A%0A%20%20%20%20sims_k_bacillus%20%3D%20sims_knn_full%5B%3A%2C%20%3Ak_bacillus%5D%0A%20%20%20%20idx_k_bacillus%20%3D%20idx_knn_full%5B%3A%2C%20%3Ak_bacillus%5D%0A%0A%20%20%20%20%23%20kNN%20graph%20for%20Bacillus%20at%20this%20k%0A%20%20%20%20A_sym_k_bacillus%20%3D%20build_knn_graph(idx_k_bacillus%2C%20sims_k_bacillus)%0A%0A%20%20%20%20%23%20HDBSCAN%20on%20embeddings%20(macro%20basins)%0A%20%20%20%20labels_hdb_bacillus%2C%20hdbscan_model_bacillus%20%3D%20run_hdbscan(%0A%20%20%20%20%20%20%20%20X_genus%2C%0A%20%20%20%20%20%20%20%20min_cluster_size%3D50%2C%20%20%20%23%20tune%20if%20you%20like%0A%20%20%20%20%20%20%20%20min_samples%3DNone%2C%0A%20%20%20%20)%0A%0A%20%20%20%20%23%20Leiden%20on%20kNN%20graph%20(species%20candidates)%0A%20%20%20%20labels_leiden_bacillus%2C%20g_leiden_bacillus%2C%20partition_leiden_bacillus%20%3D%20run_leiden_from_adj(%0A%20%20%20%20%20%20%20%20A_sym_k_bacillus%2C%0A%20%20%20%20%20%20%20%20resolution%3D1.0%2C%0A%20%20%20%20)%0A%0A%20%20%20%20unique_hdb_bacillus%20%3D%20np.unique(labels_hdb_bacillus%5Blabels_hdb_bacillus%20%3E%3D%200%5D)%0A%20%20%20%20unique_leiden_bacillus%20%3D%20np.unique(labels_leiden_bacillus)%0A%0A%20%20%20%20print(f%22%5BBacillus%5D%20HDBSCAN%20clusters%20(k%3D%7Bk_bacillus%7D)%3A%20%7Blen(unique_hdb_bacillus)%7D%20%2B%20noise%22)%0A%20%20%20%20print(f%22%5BBacillus%5D%20Leiden%20clusters%20(k%3D%7Bk_bacillus%7D)%3A%20%7Blen(unique_leiden_bacillus)%7D%22)%0A%20%20%20%20return%20labels_hdb_bacillus%2C%20labels_leiden_bacillus%0A%0A%0A%40app.cell%0Adef%20_(X_genus%2C%20labels_hdb_bacillus%2C%20labels_leiden_bacillus%2C%20np)%3A%0A%20%20%20%20from%20scipy.cluster.hierarchy%20import%20linkage%2C%20dendrogram%0A%20%20%20%20import%20matplotlib.pyplot%20as%20plt%0A%20%20%20%20from%20collections%20import%20Counter%0A%0A%20%20%20%20leiden_ids_bacillus%20%3D%20np.unique(labels_leiden_bacillus)%0A%0A%20%20%20%20centroids_bacillus%20%3D%20%5B%5D%0A%20%20%20%20dominant_hdb_bacillus%20%3D%20%5B%5D%0A%20%20%20%20sizes_bacillus%20%3D%20%5B%5D%0A%0A%20%20%20%20for%20cid%20in%20leiden_ids_bacillus%3A%0A%20%20%20%20%20%20%20%20mask%20%3D%20labels_leiden_bacillus%20%3D%3D%20cid%0A%20%20%20%20%20%20%20%20X_c%20%3D%20X_genus%5Bmask%5D%0A%20%20%20%20%20%20%20%20centroids_bacillus.append(X_c.mean(axis%3D0))%0A%0A%20%20%20%20%20%20%20%20sizes_bacillus.append(mask.sum())%0A%0A%20%20%20%20%20%20%20%20hdb_labels_in_cluster%20%3D%20labels_hdb_bacillus%5Bmask%5D%0A%20%20%20%20%20%20%20%20hdb_non_noise%20%3D%20hdb_labels_in_cluster%5Bhdb_labels_in_cluster%20%3E%3D%200%5D%0A%20%20%20%20%20%20%20%20if%20len(hdb_non_noise)%20%3D%3D%200%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20dominant_hdb_bacillus.append(-1)%0A%20%20%20%20%20%20%20%20else%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20dom%20%3D%20Counter(hdb_non_noise).most_common(1)%5B0%5D%5B0%5D%0A%20%20%20%20%20%20%20%20%20%20%20%20dominant_hdb_bacillus.append(dom)%0A%0A%20%20%20%20centroids_bacillus%20%3D%20np.vstack(centroids_bacillus)%0A%0A%20%20%20%20%23%20Hierarchical%20clustering%20on%20Leiden%20centroids%0A%20%20%20%20Z_bacillus%20%3D%20linkage(centroids_bacillus%2C%20method%3D%22ward%22)%0A%0A%20%20%20%20%23%20Color%20map%20for%20HDBSCAN%20basins%0A%20%20%20%20palette%20%3D%20plt.rcParams%5B%22axes.prop_cycle%22%5D.by_key()%5B%22color%22%5D%0A%20%20%20%20color_map_bacillus%20%3D%20%7B%7D%0A%20%20%20%20for%20h%20in%20set(dominant_hdb_bacillus)%3A%0A%20%20%20%20%20%20%20%20if%20h%20%3D%3D%20-1%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20color_map_bacillus%5Bh%5D%20%3D%20%22lightgray%22%0A%20%20%20%20%20%20%20%20else%3A%0A%20%20%20%20%20%20%20%20%20%20%20%20color_map_bacillus%5Bh%5D%20%3D%20palette%5Bh%20%25%20len(palette)%5D%0A%0A%20%20%20%20leaf_colors_bacillus%20%3D%20%7B%0A%20%20%20%20%20%20%20%20str(cid)%3A%20color_map_bacillus%5Bdom%5D%0A%20%20%20%20%20%20%20%20for%20cid%2C%20dom%20in%20zip(leiden_ids_bacillus%2C%20dominant_hdb_bacillus)%0A%20%20%20%20%7D%0A%0A%20%20%20%20fig%2C%20ax%20%3D%20plt.subplots(figsize%3D(10%2C%206))%0A%20%20%20%20dendrogram(%0A%20%20%20%20%20%20%20%20Z_bacillus%2C%0A%20%20%20%20%20%20%20%20labels%3D%5Bstr(cid)%20for%20cid%20in%20leiden_ids_bacillus%5D%2C%0A%20%20%20%20%20%20%20%20leaf_rotation%3D90%2C%0A%20%20%20%20%20%20%20%20leaf_font_size%3D8%2C%0A%20%20%20%20%20%20%20%20link_color_func%3Dlambda%20k%3A%20%22black%22%2C%0A%20%20%20%20%20%20%20%20ax%3Dax%2C%0A%20%20%20%20)%0A%0A%20%20%20%20%23%20Color%20tick%20labels%20by%20dominant%20HDBSCAN%20basin%0A%20%20%20%20for%20tick_label%20in%20ax.get_xmajorticklabels()%3A%0A%20%20%20%20%20%20%20%20cid_str%20%3D%20tick_label.get_text()%0A%20%20%20%20%20%20%20%20tick_label.set_color(leaf_colors_bacillus.get(cid_str%2C%20%22black%22))%0A%0A%20%20%20%20ax.set_title(%0A%20%20%20%20%20%20%20%20%22Bacillus%20%E2%80%94%20Leiden%20cluster%20dendrogram%5Cn(leaves%20colored%20by%20dominant%20HDBSCAN%20basin)%22%0A%20%20%20%20)%0A%20%20%20%20ax.set_ylabel(%22Linkage%20distance%22)%0A%20%20%20%20fig.tight_layout()%0A%20%20%20%20fig%0A%20%20%20%20return%0A%0A%0A%40app.cell%0Adef%20_(df_genus%2C%20labels_hdb_bacillus%2C%20labels_leiden_bacillus%2C%20pl)%3A%0A%20%20%20%20assert%20df_genus.height%20%3D%3D%20len(labels_hdb_bacillus)%20%3D%3D%20len(labels_leiden_bacillus)%0A%0A%20%20%20%20df_bacillus_with_clusters%20%3D%20df_genus.with_columns(%0A%20%20%20%20%20%20%20%20%5B%0A%20%20%20%20%20%20%20%20%20%20%20%20pl.Series(%22cluster_hdbscan_bacillus%22%2C%20labels_hdb_bacillus)%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20pl.Series(%22cluster_leiden_bacillus%22%2C%20labels_leiden_bacillus)%2C%0A%20%20%20%20%20%20%20%20%5D%0A%20%20%20%20)%0A%0A%20%20%20%20%23%20counts%20of%20species%20per%20Leiden%20cluster%0A%20%20%20%20df_bacillus_cluster_species%20%3D%20(%0A%20%20%20%20%20%20%20%20df_bacillus_with_clusters%0A%20%20%20%20%20%20%20%20.group_by(%5B%22cluster_leiden_bacillus%22%2C%20%22species%22%5D)%0A%20%20%20%20%20%20%20%20.len()%0A%20%20%20%20%20%20%20%20.rename(%7B%22len%22%3A%20%22count_in_cluster%22%7D)%0A%20%20%20%20)%0A%0A%20%20%20%20%23%20summary%20per%20Leiden%20cluster%0A%20%20%20%20df_bacillus_cluster_totals%20%3D%20(%0A%20%20%20%20%20%20%20%20df_bacillus_cluster_species%0A%20%20%20%20%20%20%20%20.group_by(%22cluster_leiden_bacillus%22)%0A%20%20%20%20%20%20%20%20.agg(%0A%20%20%20%20%20%20%20%20%20%20%20%20%5B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20pl.col(%22count_in_cluster%22).sum().alias(%22cluster_size%22)%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20pl.col(%22species%22).n_unique().alias(%22n_species_in_cluster%22)%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20pl.struct(%5B%22species%22%2C%20%22count_in_cluster%22%5D)%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20.sort_by(%22count_in_cluster%22%2C%20descending%3DTrue)%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20.first()%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20.alias(%22dominant_pair%22)%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%5D%0A%20%20%20%20%20%20%20%20)%0A%20%20%20%20)%0A%0A%20%20%20%20df_bacillus_cluster_summary%20%3D%20(%0A%20%20%20%20%20%20%20%20df_bacillus_cluster_totals%0A%20%20%20%20%20%20%20%20.with_columns(%0A%20%20%20%20%20%20%20%20%20%20%20%20%5B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20pl.col(%22dominant_pair%22).struct.field(%22species%22).alias(%22dominant_species%22)%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20pl.col(%22dominant_pair%22).struct.field(%22count_in_cluster%22).alias(%22dominant_count%22)%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%5D%0A%20%20%20%20%20%20%20%20)%0A%20%20%20%20%20%20%20%20.with_columns(%0A%20%20%20%20%20%20%20%20%20%20%20%20(pl.col(%22dominant_count%22)%20%2F%20pl.col(%22cluster_size%22)).alias(%22dominant_purity%22)%0A%20%20%20%20%20%20%20%20)%0A%20%20%20%20%20%20%20%20.drop(%22dominant_pair%22)%0A%20%20%20%20%20%20%20%20.sort(%22cluster_size%22%2C%20descending%3DTrue)%0A%20%20%20%20)%0A%0A%20%20%20%20df_bacillus_cluster_summary%0A%20%20%20%20return%0A%0A%0Aif%20__name__%20%3D%3D%20%22__main__%22%3A%0A%20%20%20%20app.run()%0A</marimo-code></head>
+  <body>
+    <div id="root"></div>
+    <!-- This is a portal for the data editor to render in -->
+    <div id="portal" data-testid="glide-portal" style="position: fixed; left: 0; top: 0; z-index: 9999"></div>
+    <script data-marimo="true">
+      window.__MARIMO_MOUNT_CONFIG__ = {
+            "filename": "notebook.py",
+            "mode": "read",
+            "version": "0.18.1",
+            "serverToken": "unused",
+            "config": {"ai": {"models": {"custom_models": [], "displayed_models": []}}, "completion": {"activate_on_typing": true, "copilot": false}, "diagnostics": {"sql_linter": true}, "display": {"cell_output": "below", "code_editor_font_size": 14, "dataframes": "rich", "default_table_max_columns": 50, "default_table_page_size": 10, "default_width": "medium", "reference_highlighting": false, "theme": "light"}, "formatting": {"line_length": 79}, "keymap": {"overrides": {}, "preset": "default"}, "language_servers": {"pylsp": {"enable_flake8": false, "enable_mypy": true, "enable_pydocstyle": false, "enable_pyflakes": false, "enable_pylint": false, "enable_ruff": true, "enabled": false}}, "mcp": {"mcpServers": {}, "presets": []}, "package_management": {"manager": "pip"}, "runtime": {"auto_instantiate": false, "auto_reload": "off", "default_sql_output": "auto", "on_cell_change": "autorun", "output_max_bytes": 8000000, "reactive_tests": true, "std_stream_max_bytes": 1000000, "watcher_on_save": "lazy"}, "save": {"autosave": "off", "autosave_delay": 1000, "format_on_save": false}, "server": {"browser": "default", "follow_symlink": false}, "snippets": {"custom_paths": [], "include_default_snippets": true}},
+            "configOverrides": {},
+            "appConfig": {"sql_output": "auto", "width": "full"},
+            "view": {"showAppCode": false},
+            "notebook": null,
+            "session": null,
+            "runtimeConfig": null,
+        };
+    </script>
+  </body>
+</html>
