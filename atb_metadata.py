@@ -232,7 +232,6 @@ def _(df_tax, pl):
         ])
         .unique()
     )
-
     return (df_tax_clean,)
 
 
@@ -279,6 +278,14 @@ def _(df_panspace_clean, df_tax_clean):
         how="left"
     )
     return (df_panspace_tax,)
+
+
+@app.cell
+def _(df_panspace_tax, pl):
+    df_panspace_tax.filter(
+        pl.col("kingdom_name").is_null()    
+    )
+    return
 
 
 @app.cell
