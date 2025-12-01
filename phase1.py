@@ -1,6 +1,6 @@
 import marimo
 
-__generated_with = "0.18.0"
+__generated_with = "0.18.1"
 app = marimo.App(width="full")
 
 
@@ -53,12 +53,12 @@ def paths(Path):
     EMBEDDINGS_PATH = BASE_DIR / "embeddings.npy"
     ID_EMBEDDINGS_PATH = BASE_DIR / "id_embeddings.json"
     LABELS_PATH = BASE_DIR / "labels.json"
+    taxonomy = "/Users/lourdes/Dropbox/Curro/Projects/arrakis/taxonomy.tsv.gz"
+    BASE_DIR, EMBEDDINGS_PATH, ID_EMBEDDINGS_PATH, LABELS_PATH, taxonomy
+    return EMBEDDINGS_PATH, ID_EMBEDDINGS_PATH, LABELS_PATH, taxonomy
 
-    BASE_DIR, EMBEDDINGS_PATH, ID_EMBEDDINGS_PATH, LABELS_PATH
-    return EMBEDDINGS_PATH, ID_EMBEDDINGS_PATH, LABELS_PATH
 
-
-@app.cell
+@app.cell(hide_code=True)
 def loading(
     EMBEDDINGS_PATH,
     ID_EMBEDDINGS_PATH,
@@ -111,7 +111,7 @@ def loading(
     return E, df
 
 
-@app.cell(hide_code=True)
+@app.cell
 def create_df_tax(df, pl):
     df_tax = df.clone()
     df_tax = df_tax.with_columns(
@@ -153,6 +153,30 @@ def create_df_tax(df, pl):
         .alias("species")
     )
     return (df_tax,)
+
+
+@app.cell
+def _(df_tax, pl, taxonomy):
+    df_tree = pl.read_csv(
+        taxonomy,
+        separator="\t"
+    )
+    df_f = df_tree.join(df_tax, on = "sample_accession")
+    df_f.columns
+    return (df_f,)
+
+
+@app.cell
+def _(df_f, pl):
+    df_f.group_by("phylum_name").agg([
+        pl.n_unique("class_name").alias("n_class"),
+        pl.n_unique("order_name").alias("n_order"),
+        pl.n_unique("family_name").alias("n_family"),
+        pl.n_unique("genus_name").alias("n_genus"),
+        pl.n_unique("species_right").alias("n_species"),
+        pl.n_unique("sample_accession").alias("n_accession"),
+    ]).sort("phylum_name")
+    return
 
 
 @app.cell(hide_code=True)
