@@ -38,9 +38,9 @@ def _(Path):
     EMBEDDINGS_PATH = BASE_DIR / "embeddings.npy"
     ID_EMBEDDINGS_PATH = BASE_DIR / "id_embeddings.json"
     LABELS_PATH = BASE_DIR / "labels.json"
-
+    taxonomy = "/mnt/san/microbio/projects/arrakis/taxonomy.tsv.gz"
     BASE_DIR, EMBEDDINGS_PATH, ID_EMBEDDINGS_PATH, LABELS_PATH
-    return EMBEDDINGS_PATH, ID_EMBEDDINGS_PATH, LABELS_PATH
+    return EMBEDDINGS_PATH, ID_EMBEDDINGS_PATH, LABELS_PATH, taxonomy
 
 
 @app.cell
@@ -70,11 +70,22 @@ def _(df, pl):
     df_tax = df.clone() 
     df_tax = df_tax.with_columns( pl.col("genome_id").str.split("/").alias("path_parts") )
     df_tax = df_tax.with_columns( pl.col("path_parts").list.get(-2).alias("dir_name"), pl.col("path_parts").list.get(-1).alias("filename"), )
-    df_tax = df_tax.with_columns( pl.col("filename") .str.replace(".npy", "") .alias("sample_id") )
+    df_tax = df_tax.with_columns( pl.col("filename") .str.replace(".npy", "") .alias("sample_accession") )
     df_tax = df_tax.with_columns( pl.col("raw_label") .cast(pl.Utf8) .str.split("_") .alias("label_tokens") )
     df_tax = df_tax.with_columns( pl.when(pl.col("label_tokens").list.len() >= 1) .then(pl.col("label_tokens").list.get(0)) .otherwise(None) .alias("genus") )
     df_tax = df_tax.with_columns( pl.when(pl.col("label_tokens").list.len() >= 2) .then( pl.concat_str( [ pl.col("label_tokens").list.get(0), pl.lit(" "), pl.col("label_tokens").list.slice(1).list.join(" ") ] ) ) .otherwise(None) .alias("species") )
     return (df_tax,)
+
+
+@app.cell
+def _(df_tax, pl, taxonomy):
+    df_tree = pl.read_csv(
+        taxonomy,
+        separator="\t"
+    )
+    df_f = df_tree.join(df_tax, on = "sample_accession")
+    df_f.head()
+    return
 
 
 @app.cell
@@ -164,18 +175,20 @@ def _(E, E_genus, PCA, df_genus, idxs, pl, px):
     return
 
 
-@app.cell
-def _():
-     # k values you want to test (including self, as FAISS returns)
-    k_values = [2, 5, 6,7,8,9,10, 15, 20, 30, 50, 100]
+app._unparsable_cell(
+    r"""
+    # k values you want to test (including self, as FAISS returns)
+        k_values = [2, 5, 6,7,8,9,10, 15, 20, 30, 50, 100]
 
-    # HDBSCAN hyperparameters
-    hdb_min_cluster_size = 50    # tune per genus
-    hdb_min_samples = None       # or e.g. 10
+        # HDBSCAN hyperparameters
+        hdb_min_cluster_size = 50    # tune per genus
+        hdb_min_samples = None       # or e.g. 10
 
-    # Leiden hyperparameters
-    leiden_resolution = 1.0      # higher → more clusters
-    return hdb_min_cluster_size, hdb_min_samples, k_values, leiden_resolution
+        # Leiden hyperparameters
+        leiden_resolution = 1.0      # higher → more clusters
+    """,
+    name="_"
+)
 
 
 @app.cell
